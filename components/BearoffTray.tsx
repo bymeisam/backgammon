@@ -120,7 +120,7 @@ export default function BearoffTray({
       ref={containerRef}
       className="flex flex-col shrink-0 overflow-hidden h-full"
       style={{
-        width: Math.round(checkerSize * 1.1),
+        width: Math.round(checkerSize * 1.4),
         borderLeft: "2px solid var(--board-border)",
       }}
     >
