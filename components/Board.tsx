@@ -10,6 +10,8 @@ interface BoardProps {
   flipped: boolean
   showPointNumbers: boolean
   opponentNumbers: boolean
+  pipCount: { p1: number; p2: number }
+  showPipCount: boolean
 }
 
 const CHECKER_SIZE = 42
@@ -21,7 +23,7 @@ const GUTTER = 20
 export const BOARD_NATURAL_WIDTH  = POINT_WIDTH * 12 + BAR_WIDTH + CHECKER_SIZE + 16  // 670
 export const BOARD_NATURAL_HEIGHT = GUTTER + POINT_HEIGHT + 16 + POINT_HEIGHT + GUTTER // 416
 
-export default function Board({ state, flipped, showPointNumbers, opponentNumbers }: BoardProps) {
+export default function Board({ state, flipped, showPointNumbers, opponentNumbers, pipCount, showPipCount }: BoardProps) {
   const topRow = flipped
     ? [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
     : [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
@@ -119,9 +121,10 @@ export default function Board({ state, flipped, showPointNumbers, opponentNumber
           }}
         >
           <Bar
-            p1Count={state.bar.p1}
-            p2Count={state.bar.p2}
-            checkerSize={CHECKER_SIZE - 4}
+            bar={state.bar}
+            pipCount={pipCount}
+            showPipCount={showPipCount}
+            flipped={flipped}
             barWidth={BAR_WIDTH}
           />
         </div>

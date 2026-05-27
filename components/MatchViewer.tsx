@@ -301,19 +301,16 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
 
   const currentMove = currentSnapshot.move
 
-  function PlayerBlock({ name, score, pipCount, align }: { name: string; score: number; pipCount: number; align: 'top' | 'bottom' }) {
+  function PlayerBlock({ name, score, align }: { name: string; score: number; align: 'top' | 'bottom' }) {
     return (
       <div style={{ padding: '12px 16px', borderTop: align === 'bottom' ? '1px solid var(--surface-2)' : undefined, borderBottom: align === 'top' ? '1px solid var(--surface-2)' : undefined }}>
         <div className="font-display" style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)', lineHeight: 1.3, wordBreak: 'break-word' }}>
           {name}
         </div>
-        <div style={{ display: 'flex', gap: 10, marginTop: 3, alignItems: 'center' }}>
+        <div style={{ marginTop: 3 }}>
           <span style={{ fontSize: 12, color: 'var(--accent)', fontWeight: 600 }}>
             {score} / {match.matchLength}
           </span>
-          {showPipCount && (
-            <span style={{ fontSize: 11, color: 'var(--pip-count)' }}>pip {pipCount}</span>
-          )}
         </div>
       </div>
     )
@@ -362,7 +359,7 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
               transform: `scale(${boardScale})`,
             }}
           >
-            <Board state={currentSnapshot.state} flipped={flipped} showPointNumbers={showPointNumbers} opponentNumbers={opponentNumbers} />
+            <Board state={currentSnapshot.state} flipped={flipped} showPointNumbers={showPointNumbers} opponentNumbers={opponentNumbers} pipCount={pip} showPipCount={showPipCount} />
           </div>
         </div>
 
@@ -404,7 +401,7 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
           </div>
 
           {/* Top player */}
-          <PlayerBlock name={topName} score={topScore} pipCount={topPip} align="top" />
+          <PlayerBlock name={topName} score={topScore} align="top" />
 
           {/* Flexible spacer */}
           <div style={{ flex: 1 }} />
@@ -472,7 +469,7 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
           <div style={{ flex: 1 }} />
 
           {/* Bottom player */}
-          <PlayerBlock name={bottomName} score={bottomScore} pipCount={bottomPip} align="bottom" />
+          <PlayerBlock name={bottomName} score={bottomScore} align="bottom" />
 
           {/* Theme swatches */}
           <div
