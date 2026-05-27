@@ -1,14 +1,18 @@
-const CHECKER_SIZE = 28
+interface BarCheckerProps {
+  count: number
+  player: 1 | 2
+  checkerSize: number
+}
 
-function BarChecker({ count, player }: { count: number; player: 1 | 2 }) {
+function BarChecker({ count, player, checkerSize }: BarCheckerProps) {
   const visible = count > 0
   return (
     <div style={{
       visibility: visible ? 'visible' : 'hidden',
       opacity: visible ? 1 : 0,
       transition: 'opacity 150ms ease',
-      width: CHECKER_SIZE,
-      height: CHECKER_SIZE,
+      width: checkerSize,
+      height: checkerSize,
       borderRadius: '50%',
       background: player === 1
         ? 'radial-gradient(circle at 35% 35%, var(--checker-p1-shine), var(--checker-p1), var(--checker-p1-shadow))'
@@ -24,7 +28,7 @@ function BarChecker({ count, player }: { count: number; player: 1 | 2 }) {
     }}>
       {count > 1 && (
         <span style={{
-          fontSize: CHECKER_SIZE * 0.38,
+          fontSize: checkerSize * 0.38,
           fontWeight: 700,
           color: player === 1 ? 'var(--checker-p1-shadow)' : 'var(--checker-p2-shine)',
           fontFamily: 'var(--font-mono)',
@@ -64,9 +68,10 @@ interface BarProps {
   showPipCount: boolean
   flipped: boolean
   barWidth: number
+  checkerSize: number
 }
 
-export default function Bar({ bar, pipCount, showPipCount, flipped, barWidth }: BarProps) {
+export default function Bar({ bar, pipCount, showPipCount, flipped, barWidth, checkerSize }: BarProps) {
   const top = flipped
     ? { player: 1 as const, barCount: bar.p1, pip: pipCount.p1 }
     : { player: 2 as const, barCount: bar.p2, pip: pipCount.p2 }
@@ -87,16 +92,16 @@ export default function Bar({ bar, pipCount, showPipCount, flipped, barWidth }: 
       padding: '8px 0',
       flexShrink: 0,
     }}>
-      {/* Top half — checker outer (top), pip inner (toward center) */}
+      {/* Top half: pip outer (top), checker inner (toward center) */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-        <BarChecker count={top.barCount} player={top.player} />
         <BarPipCount pip={top.pip} visible={showPipCount} />
+        <BarChecker count={top.barCount} player={top.player} checkerSize={checkerSize} />
       </div>
 
-      {/* Bottom half — pip inner (toward center), checker outer (bottom) */}
+      {/* Bottom half: checker inner (toward center), pip outer (bottom) */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+        <BarChecker count={bottom.barCount} player={bottom.player} checkerSize={checkerSize} />
         <BarPipCount pip={bottom.pip} visible={showPipCount} />
-        <BarChecker count={bottom.barCount} player={bottom.player} />
       </div>
     </div>
   )

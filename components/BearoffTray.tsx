@@ -1,65 +1,87 @@
-import Checker from './Checker'
+function BearoffChecker({ player, checkerSize }: { player: 1 | 2; checkerSize: number }) {
+  const rimHeight = Math.round(checkerSize * 0.32)
+  return (
+    <div style={{
+      width: checkerSize,
+      height: rimHeight,
+      flexShrink: 0,
+      borderRadius: 3,
+      background: player === 1
+        ? 'linear-gradient(to bottom, var(--checker-p1-shine), var(--checker-p1) 40%, var(--checker-p1-shadow))'
+        : 'linear-gradient(to bottom, var(--checker-p2-shine), var(--checker-p2) 40%, var(--checker-p2-shadow))',
+      boxShadow: '0 1px 3px rgba(0,0,0,0.35)',
+      border: player === 1
+        ? '1px solid var(--checker-border-p1)'
+        : '1px solid var(--checker-border-p2)',
+    }} />
+  )
+}
 
 interface BearoffTrayProps {
   p1Count: number
   p2Count: number
   checkerSize: number
+  flipped: boolean
 }
 
-export default function BearoffTray({ p1Count, p2Count, checkerSize }: BearoffTrayProps) {
-  const small = Math.max(8, checkerSize * 0.55)
+export default function BearoffTray({ p1Count, p2Count, checkerSize, flipped }: BearoffTrayProps) {
+  const topPlayer    = flipped ? 1 : 2
+  const bottomPlayer = flipped ? 2 : 1
+  const topCount     = flipped ? p1Count : p2Count
+  const bottomCount  = flipped ? p2Count : p1Count
 
   return (
-    <div
-      style={{
-        width: checkerSize + 12,
-        height: '100%',
-        background: 'var(--surface)',
-        borderLeft: '1px solid var(--surface-2)',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        padding: '8px 4px',
-        gap: 4,
-        flexShrink: 0,
-      }}
-    >
-      {/* P2 borne off (top) */}
+    <div style={{
+      width: checkerSize + 10,
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      flexShrink: 0,
+      borderLeft: '2px solid var(--board-border)',
+    }}>
+      {/* Top half — stack downward from top */}
       <div
-        data-checker-id="p2-bearoff"
+        data-checker-id={`p${topPlayer}-bearoff`}
         style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: 2,
-          justifyContent: 'center',
-          maxWidth: checkerSize + 8,
           flex: 1,
-          alignContent: 'flex-start',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          paddingTop: 6,
+          paddingBottom: 4,
+          gap: 2,
+          background: 'var(--bearoff-top-bg)',
+          overflow: 'hidden',
         }}
       >
-        {p2Count > 0 && (
-          <Checker player={2} size={small} label={p2Count > 1 ? p2Count : undefined} />
-        )}
+        {Array.from({ length: topCount }).map((_, i) => (
+          <BearoffChecker key={i} player={topPlayer} checkerSize={checkerSize} />
+        ))}
       </div>
 
-      <div style={{ height: 1, width: '80%', background: 'var(--surface-2)' }} />
+      {/* Divider */}
+      <div style={{ height: 2, background: 'var(--board-border)', flexShrink: 0 }} />
 
-      {/* P1 borne off (bottom) */}
+      {/* Bottom half — stack upward from bottom */}
       <div
-        data-checker-id="p1-bearoff"
+        data-checker-id={`p${bottomPlayer}-bearoff`}
         style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: 2,
-          justifyContent: 'center',
-          maxWidth: checkerSize + 8,
           flex: 1,
-          alignContent: 'flex-end',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+          paddingBottom: 6,
+          paddingTop: 4,
+          gap: 2,
+          background: 'var(--bearoff-bottom-bg)',
+          overflow: 'hidden',
         }}
       >
-        {p1Count > 0 && (
-          <Checker player={1} size={small} label={p1Count > 1 ? p1Count : undefined} />
-        )}
+        {Array.from({ length: bottomCount }).map((_, i) => (
+          <BearoffChecker key={i} player={bottomPlayer} checkerSize={checkerSize} />
+        ))}
       </div>
     </div>
   )

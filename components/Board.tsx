@@ -8,22 +8,21 @@ import BearoffTray from './BearoffTray'
 interface BoardProps {
   state: BoardState
   flipped: boolean
-  showPointNumbers: boolean
-  opponentNumbers: boolean
   pipCount: { p1: number; p2: number }
   showPipCount: boolean
 }
 
-const CHECKER_SIZE = 42
-const POINT_WIDTH = 48
-const POINT_HEIGHT = 180
-const BAR_WIDTH = 36
+export const POINT_WIDTH = 48
+export const POINT_HEIGHT = 180
+export const CHECKER_SIZE = Math.round(POINT_WIDTH * 0.72)  // 35
+export const BAR_WIDTH = CHECKER_SIZE + 8                   // 43
+const TRAY_WIDTH = CHECKER_SIZE + 8                         // 43
 const GUTTER = 20
 
-export const BOARD_NATURAL_WIDTH  = POINT_WIDTH * 12 + BAR_WIDTH + CHECKER_SIZE + 16  // 670
-export const BOARD_NATURAL_HEIGHT = GUTTER + POINT_HEIGHT + 16 + POINT_HEIGHT + GUTTER // 416
+export const BOARD_NATURAL_WIDTH  = POINT_WIDTH * 12 + BAR_WIDTH + TRAY_WIDTH
+export const BOARD_NATURAL_HEIGHT = GUTTER + POINT_HEIGHT + 16 + POINT_HEIGHT + GUTTER
 
-export default function Board({ state, flipped, showPointNumbers, opponentNumbers, pipCount, showPipCount }: BoardProps) {
+export default function Board({ state, flipped, pipCount, showPipCount }: BoardProps) {
   const topRow = flipped
     ? [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
     : [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
@@ -46,8 +45,6 @@ export default function Board({ state, flipped, showPointNumbers, opponentNumber
             checkerSize={CHECKER_SIZE}
             pointWidth={POINT_WIDTH}
             pointHeight={POINT_HEIGHT}
-            showPointNumbers={showPointNumbers}
-            opponentNumbers={opponentNumbers}
           />
         ))}
         <div style={{ width: BAR_WIDTH, flexShrink: 0 }} />
@@ -60,8 +57,6 @@ export default function Board({ state, flipped, showPointNumbers, opponentNumber
             checkerSize={CHECKER_SIZE}
             pointWidth={POINT_WIDTH}
             pointHeight={POINT_HEIGHT}
-            showPointNumbers={showPointNumbers}
-            opponentNumbers={opponentNumbers}
           />
         ))}
       </div>
@@ -95,18 +90,9 @@ export default function Board({ state, flipped, showPointNumbers, opponentNumber
       />
 
       {/* Play area */}
-      <div
-        style={{
-          width: boardContentWidth,
-          height: '100%',
-          position: 'relative',
-          flexShrink: 0,
-        }}
-      >
+      <div style={{ width: boardContentWidth, height: '100%', position: 'relative', flexShrink: 0 }}>
         <div style={{ paddingTop: GUTTER }}>{renderHalf(topRow, true)}</div>
-
         <div style={{ height: 16, background: 'var(--bar-bg)' }} />
-
         <div style={{ paddingBottom: GUTTER }}>{renderHalf(bottomRow, false)}</div>
 
         {/* Bar column */}
@@ -126,6 +112,7 @@ export default function Board({ state, flipped, showPointNumbers, opponentNumber
             showPipCount={showPipCount}
             flipped={flipped}
             barWidth={BAR_WIDTH}
+            checkerSize={CHECKER_SIZE}
           />
         </div>
       </div>
@@ -135,6 +122,7 @@ export default function Board({ state, flipped, showPointNumbers, opponentNumber
         p1Count={state.borneOff.p1}
         p2Count={state.borneOff.p2}
         checkerSize={CHECKER_SIZE}
+        flipped={flipped}
       />
     </div>
   )

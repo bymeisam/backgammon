@@ -26,6 +26,8 @@ export const THEMES: Record<Theme, Record<string, string>> = {
     '--dice-bg': '#f5f5f5',
     '--dice-dot': '#111111',
     '--dice-shadow': 'rgba(0,0,0,0.5)',
+    '--bearoff-top-bg': '#0a0e18',
+    '--bearoff-bottom-bg': '#0d1220',
   },
   'classic-dark': {
     '--board-bg': '#1a0e08',
@@ -52,6 +54,8 @@ export const THEMES: Record<Theme, Record<string, string>> = {
     '--dice-bg': '#f0e6cc',
     '--dice-dot': '#1a0e08',
     '--dice-shadow': 'rgba(0,0,0,0.6)',
+    '--bearoff-top-bg': '#120a05',
+    '--bearoff-bottom-bg': '#160d07',
   },
   'green-felt': {
     '--board-bg': '#1a3d2b',
@@ -78,6 +82,8 @@ export const THEMES: Record<Theme, Record<string, string>> = {
     '--dice-bg': '#f5f0e0',
     '--dice-dot': '#1a3d2b',
     '--dice-shadow': 'rgba(0,0,0,0.5)',
+    '--bearoff-top-bg': '#102a1c',
+    '--bearoff-bottom-bg': '#132e1f',
   },
   'clean-light': {
     '--board-bg': '#f0ece4',
@@ -104,6 +110,8 @@ export const THEMES: Record<Theme, Record<string, string>> = {
     '--dice-bg': '#2c3e50',
     '--dice-dot': '#f0ece4',
     '--dice-shadow': 'rgba(0,0,0,0.2)',
+    '--bearoff-top-bg': '#e8e4dc',
+    '--bearoff-bottom-bg': '#ede9e1',
   },
 }
 

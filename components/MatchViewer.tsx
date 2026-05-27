@@ -6,9 +6,10 @@ import { deepClone, applySubMoveToState } from '@/lib/engine'
 import { calcPipCount } from '@/lib/pip'
 import { animateCheckerArc, getCheckerCenter } from '@/lib/animator'
 import Board, { BOARD_NATURAL_WIDTH, BOARD_NATURAL_HEIGHT } from './Board'
+import PointNumberStrip, { STRIP_HEIGHT } from './PointNumberStrip'
+import BoardSideStrip from './BoardSideStrip'
 import MoveListPanel from './MoveListPanel'
 import ThemeSwitcher from './ThemeSwitcher'
-import Dice from './Dice'
 
 interface MatchViewerProps {
   match: Match
@@ -81,23 +82,17 @@ async function runMoveAnimation(move: Move, fromState: BoardState, overlay: HTML
 
 // ── Toggle ─────────────────────────────────────────────────────────────────────
 
-function Toggle({ label, value, onChange, description }: {
+function Toggle({ label, value, onChange }: {
   label: string
   value: boolean
   onChange: (v: boolean) => void
-  description?: string
 }) {
   return (
     <div
       onClick={() => onChange(!value)}
       style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '7px 0' }}
     >
-      <div>
-        <div style={{ color: 'var(--text-primary)', fontSize: 12, fontWeight: 500, lineHeight: 1.3 }}>{label}</div>
-        {description && (
-          <div style={{ color: 'var(--text-secondary)', fontSize: 10, marginTop: 2 }}>{description}</div>
-        )}
-      </div>
+      <div style={{ color: 'var(--text-primary)', fontSize: 12, fontWeight: 500 }}>{label}</div>
       <div style={{
         width: 36, height: 20, borderRadius: 10,
         background: value ? 'var(--accent)' : 'var(--surface-2)',
@@ -178,23 +173,24 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
     try { return localStorage.getItem('bgv-opponent-numbers') === 'true' } catch { return false }
   })
 
-  // Board scaling
+  // Board scaling — account for point number strips above and below
   const boardContainerRef = useRef<HTMLDivElement | null>(null)
   const [boardScale, setBoardScale] = useState(1)
+  const naturalH = BOARD_NATURAL_HEIGHT + STRIP_HEIGHT * 2
 
   useEffect(() => {
     const container = boardContainerRef.current
     if (!container) return
     const observer = new ResizeObserver(([entry]) => {
       const { width, height } = entry.contentRect
-      const scale = Math.min(width / BOARD_NATURAL_WIDTH, height / BOARD_NATURAL_HEIGHT) * 0.97
+      const scale = Math.min(width / BOARD_NATURAL_WIDTH, height / naturalH) * 0.97
       setBoardScale(Math.max(0.1, scale))
     })
     observer.observe(container)
     return () => observer.disconnect()
-  }, [])
+  }, [naturalH])
 
-  // Fixed-position animation overlay (outside the scaled board)
+  // Fixed-position animation overlay
   const overlayRef = useRef<HTMLDivElement | null>(null)
   const animatingRef = useRef(false)
   const snapIdxRef = useRef(0)
@@ -269,52 +265,13 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
     }
   }
 
-  function cycleSpeed() {
-    const idx = SPEEDS.indexOf(speed)
-    setSpeed(SPEEDS[(idx + 1) % SPEEDS.length])
-  }
-
   // Derived state
   const currentGame = match.games[currentGameIndex]
   const currentSnapshot = currentGame.snapshots[currentSnapshotIndex]
   const pip = calcPipCount(currentSnapshot.state)
   const canPrev = currentSnapshotIndex > 0
   const canNext = currentSnapshotIndex < currentGame.snapshots.length - 1
-  const speedIdx = SPEEDS.indexOf(speed)
-
-  let p1Score = 0, p2Score = 0
-  for (let i = 0; i < currentGameIndex; i++) {
-    const g = match.games[i]
-    if (g.winner === 1) p1Score += g.pointsWon
-    if (g.winner === 2) p2Score += g.pointsWon
-  }
-
-  // flipped = true → P2 on bottom visually, P1 on top
-  const topPlayer    = flipped ? 1 : 2
-  const bottomPlayer = flipped ? 2 : 1
-  const topName    = topPlayer === 1 ? match.player1 : match.player2
-  const bottomName = bottomPlayer === 1 ? match.player1 : match.player2
-  const topScore    = topPlayer === 1 ? p1Score : p2Score
-  const bottomScore = bottomPlayer === 1 ? p1Score : p2Score
-  const topPip    = topPlayer === 1 ? pip.p1 : pip.p2
-  const bottomPip = bottomPlayer === 1 ? pip.p1 : pip.p2
-
   const currentMove = currentSnapshot.move
-
-  function PlayerBlock({ name, score, align }: { name: string; score: number; align: 'top' | 'bottom' }) {
-    return (
-      <div style={{ padding: '12px 16px', borderTop: align === 'bottom' ? '1px solid var(--surface-2)' : undefined, borderBottom: align === 'top' ? '1px solid var(--surface-2)' : undefined }}>
-        <div className="font-display" style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)', lineHeight: 1.3, wordBreak: 'break-word' }}>
-          {name}
-        </div>
-        <div style={{ marginTop: 3 }}>
-          <span style={{ fontSize: 12, color: 'var(--accent)', fontWeight: 600 }}>
-            {score} / {match.matchLength}
-          </span>
-        </div>
-      </div>
-    )
-  }
 
   const sectionLabel: React.CSSProperties = {
     fontSize: 10,
@@ -327,10 +284,10 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
 
   return (
     <>
-      {/* 3-column layout */}
+      {/* 4-column layout: move list | board | side strip | controls */}
       <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
 
-        {/* Left: collapsible move list */}
+        {/* Col 1: collapsible move list */}
         <MoveListPanel
           match={match}
           currentGameIndex={currentGameIndex}
@@ -340,7 +297,7 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
           onJumpTo={navigateTo}
         />
 
-        {/* Center: board, scales to fill */}
+        {/* Col 2: board + point number strips, scales to fill */}
         <div
           ref={boardContainerRef}
           style={{
@@ -357,16 +314,43 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
             style={{
               transformOrigin: 'center center',
               transform: `scale(${boardScale})`,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
             }}
           >
-            <Board state={currentSnapshot.state} flipped={flipped} showPointNumbers={showPointNumbers} opponentNumbers={opponentNumbers} pipCount={pip} showPipCount={showPipCount} />
+            <PointNumberStrip
+              position="top"
+              flipped={flipped}
+              opponentNumbers={opponentNumbers}
+              visible={showPointNumbers}
+            />
+            <Board
+              state={currentSnapshot.state}
+              flipped={flipped}
+              pipCount={pip}
+              showPipCount={showPipCount}
+            />
+            <PointNumberStrip
+              position="bottom"
+              flipped={flipped}
+              opponentNumbers={opponentNumbers}
+              visible={showPointNumbers}
+            />
           </div>
         </div>
 
-        {/* Right: controls panel */}
+        {/* Col 3: side strip — player names + dice */}
+        <BoardSideStrip
+          match={match}
+          currentMove={currentMove}
+          flipped={flipped}
+        />
+
+        {/* Col 4: controls panel */}
         <aside
           style={{
-            width: 220,
+            width: 200,
             height: '100vh',
             background: 'var(--surface)',
             borderLeft: '1px solid var(--surface-2)',
@@ -400,42 +384,8 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
             </div>
           </div>
 
-          {/* Top player */}
-          <PlayerBlock name={topName} score={topScore} align="top" />
-
-          {/* Flexible spacer */}
-          <div style={{ flex: 1 }} />
-
-          {/* Dice / move info */}
-          <div
-            style={{
-              padding: '10px 16px',
-              borderTop: '1px solid var(--surface-2)',
-              minHeight: 58,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 4,
-            }}
-          >
-            {currentMove ? (
-              <>
-                {!currentMove.action && (
-                  <Dice dice={currentMove.dice} player={currentMove.player} noMove={currentMove.subMoves.length === 0} />
-                )}
-                <span style={{ fontSize: 10, color: 'var(--text-secondary)' }}>
-                  {currentMove.player === 1 ? match.player1 : match.player2}
-                  {currentMove.action === 'double' && ` doubles → ${currentMove.dice[0]}`}
-                  {currentMove.action === 'take'   && ' takes'}
-                  {currentMove.action === 'drop'   && ' drops'}
-                </span>
-              </>
-            ) : (
-              <span style={{ fontSize: 10, color: 'var(--text-secondary)' }}>Opening position</span>
-            )}
-          </div>
-
           {/* Play controls */}
-          <div style={{ padding: '8px 16px', display: 'flex', gap: 6, justifyContent: 'center', borderTop: '1px solid var(--surface-2)' }}>
+          <div style={{ padding: '10px 16px', borderBottom: '1px solid var(--surface-2)', display: 'flex', gap: 6, justifyContent: 'center' }}>
             <PanelBtn onClick={stepBackward} disabled={!canPrev} title="Previous">◀</PanelBtn>
             <PanelBtn onClick={() => setIsPlaying(p => !p)} title={isPlaying ? 'Pause' : 'Play'}>
               {isPlaying ? '⏸' : '▶'}
@@ -444,16 +394,16 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
           </div>
 
           {/* Display toggles */}
-          <div style={{ padding: '10px 16px', borderTop: '1px solid var(--surface-2)' }}>
+          <div style={{ padding: '10px 16px', borderBottom: '1px solid var(--surface-2)' }}>
             <div style={sectionLabel}>Display</div>
             <Toggle label="Pip Count" value={showPipCount} onChange={setShowPipCount} />
             <Toggle label="Point Numbers" value={showPointNumbers} onChange={setShowPointNumbers} />
-            <Toggle label="Opponent Numbers" value={opponentNumbers} onChange={setOpponentNumbers} />
+            <Toggle label="Opponent Nums" value={opponentNumbers} onChange={setOpponentNumbers} />
             <Toggle label="Flip Board" value={flipped} onChange={setFlipped} />
           </div>
 
           {/* Speed section */}
-          <div style={{ padding: '10px 16px', borderTop: '1px solid var(--surface-2)' }}>
+          <div style={{ padding: '10px 16px', borderBottom: '1px solid var(--surface-2)' }}>
             <div style={sectionLabel}>Speed</div>
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 6 }}>
               {SPEEDS.map((s, i) => (
@@ -465,11 +415,7 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
             </div>
           </div>
 
-          {/* Flexible spacer */}
           <div style={{ flex: 1 }} />
-
-          {/* Bottom player */}
-          <PlayerBlock name={bottomName} score={bottomScore} align="bottom" />
 
           {/* Theme swatches */}
           <div
