@@ -8,6 +8,8 @@ import BearoffTray from './BearoffTray'
 interface BoardProps {
   state: BoardState
   flipped: boolean
+  showPointNumbers: boolean
+  opponentNumbers: boolean
 }
 
 const CHECKER_SIZE = 42
@@ -19,7 +21,7 @@ const GUTTER = 20
 export const BOARD_NATURAL_WIDTH  = POINT_WIDTH * 12 + BAR_WIDTH + CHECKER_SIZE + 16  // 670
 export const BOARD_NATURAL_HEIGHT = GUTTER + POINT_HEIGHT + 16 + POINT_HEIGHT + GUTTER // 416
 
-export default function Board({ state, flipped }: BoardProps) {
+export default function Board({ state, flipped, showPointNumbers, opponentNumbers }: BoardProps) {
   const topRow = flipped
     ? [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
     : [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
@@ -42,6 +44,8 @@ export default function Board({ state, flipped }: BoardProps) {
             checkerSize={CHECKER_SIZE}
             pointWidth={POINT_WIDTH}
             pointHeight={POINT_HEIGHT}
+            showPointNumbers={showPointNumbers}
+            opponentNumbers={opponentNumbers}
           />
         ))}
         <div style={{ width: BAR_WIDTH, flexShrink: 0 }} />
@@ -54,6 +58,8 @@ export default function Board({ state, flipped }: BoardProps) {
             checkerSize={CHECKER_SIZE}
             pointWidth={POINT_WIDTH}
             pointHeight={POINT_HEIGHT}
+            showPointNumbers={showPointNumbers}
+            opponentNumbers={opponentNumbers}
           />
         ))}
       </div>

@@ -79,6 +79,45 @@ async function runMoveAnimation(move: Move, fromState: BoardState, overlay: HTML
   }
 }
 
+// ── Toggle ─────────────────────────────────────────────────────────────────────
+
+function Toggle({ label, value, onChange, description }: {
+  label: string
+  value: boolean
+  onChange: (v: boolean) => void
+  description?: string
+}) {
+  return (
+    <div
+      onClick={() => onChange(!value)}
+      style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '7px 0' }}
+    >
+      <div>
+        <div style={{ color: 'var(--text-primary)', fontSize: 12, fontWeight: 500, lineHeight: 1.3 }}>{label}</div>
+        {description && (
+          <div style={{ color: 'var(--text-secondary)', fontSize: 10, marginTop: 2 }}>{description}</div>
+        )}
+      </div>
+      <div style={{
+        width: 36, height: 20, borderRadius: 10,
+        background: value ? 'var(--accent)' : 'var(--surface-2)',
+        position: 'relative', transition: 'background 150ms ease',
+        flexShrink: 0, marginLeft: 12,
+      }}>
+        <div style={{
+          width: 14, height: 14, borderRadius: '50%',
+          background: '#fff',
+          position: 'absolute',
+          top: 3,
+          left: value ? 19 : 3,
+          transition: 'left 150ms ease',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+        }} />
+      </div>
+    </div>
+  )
+}
+
 // ── Small UI button ────────────────────────────────────────────────────────────
 
 function PanelBtn({
@@ -129,7 +168,15 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
   const [showMoveList, setShowMoveList] = useState<boolean>(() => {
     try { return localStorage.getItem('bgv-movelist') !== 'false' } catch { return true }
   })
-  const [showPipCount] = useState<boolean>(true)
+  const [showPipCount, setShowPipCount] = useState<boolean>(() => {
+    try { return localStorage.getItem('bgv-pip-count') !== 'false' } catch { return true }
+  })
+  const [showPointNumbers, setShowPointNumbers] = useState<boolean>(() => {
+    try { return localStorage.getItem('bgv-point-numbers') !== 'false' } catch { return true }
+  })
+  const [opponentNumbers, setOpponentNumbers] = useState<boolean>(() => {
+    try { return localStorage.getItem('bgv-opponent-numbers') === 'true' } catch { return false }
+  })
 
   // Board scaling
   const boardContainerRef = useRef<HTMLDivElement | null>(null)
@@ -158,6 +205,9 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
   useEffect(() => { try { localStorage.setItem('bgv-speed', String(speed)) } catch {} }, [speed])
   useEffect(() => { try { localStorage.setItem('bgv-flipped', String(flipped)) } catch {} }, [flipped])
   useEffect(() => { try { localStorage.setItem('bgv-movelist', String(showMoveList)) } catch {} }, [showMoveList])
+  useEffect(() => { try { localStorage.setItem('bgv-pip-count', String(showPipCount)) } catch {} }, [showPipCount])
+  useEffect(() => { try { localStorage.setItem('bgv-point-numbers', String(showPointNumbers)) } catch {} }, [showPointNumbers])
+  useEffect(() => { try { localStorage.setItem('bgv-opponent-numbers', String(opponentNumbers)) } catch {} }, [opponentNumbers])
 
   async function stepTo(targetIdx: number, animate: boolean, dur: number): Promise<void> {
     if (animatingRef.current) return
@@ -269,6 +319,15 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
     )
   }
 
+  const sectionLabel: React.CSSProperties = {
+    fontSize: 10,
+    fontWeight: 600,
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase',
+    color: 'var(--text-secondary)',
+    marginBottom: 4,
+  }
+
   return (
     <>
       {/* 3-column layout */}
@@ -303,7 +362,7 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
               transform: `scale(${boardScale})`,
             }}
           >
-            <Board state={currentSnapshot.state} flipped={flipped} />
+            <Board state={currentSnapshot.state} flipped={flipped} showPointNumbers={showPointNumbers} opponentNumbers={opponentNumbers} />
           </div>
         </div>
 
@@ -379,7 +438,7 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
           </div>
 
           {/* Play controls */}
-          <div style={{ padding: '8px 16px', display: 'flex', gap: 6, justifyContent: 'center' }}>
+          <div style={{ padding: '8px 16px', display: 'flex', gap: 6, justifyContent: 'center', borderTop: '1px solid var(--surface-2)' }}>
             <PanelBtn onClick={stepBackward} disabled={!canPrev} title="Previous">◀</PanelBtn>
             <PanelBtn onClick={() => setIsPlaying(p => !p)} title={isPlaying ? 'Pause' : 'Play'}>
               {isPlaying ? '⏸' : '▶'}
@@ -387,13 +446,26 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
             <PanelBtn onClick={stepForward} disabled={!canNext} title="Next">▶</PanelBtn>
           </div>
 
-          {/* Secondary controls */}
-          <div style={{ padding: '6px 16px 10px', display: 'flex', gap: 6, flexWrap: 'wrap', borderBottom: '1px solid var(--surface-2)' }}>
-            <PanelBtn onClick={cycleSpeed} title="Cycle speed">
-              {SPEED_LABELS[speedIdx] ?? '1×'}
-            </PanelBtn>
-            <PanelBtn onClick={() => setFlipped(f => !f)} active={flipped} title="Flip board">⇅</PanelBtn>
-            <PanelBtn onClick={() => setShowMoveList(v => !v)} active={showMoveList} title="Toggle move list">☰</PanelBtn>
+          {/* Display toggles */}
+          <div style={{ padding: '10px 16px', borderTop: '1px solid var(--surface-2)' }}>
+            <div style={sectionLabel}>Display</div>
+            <Toggle label="Pip Count" value={showPipCount} onChange={setShowPipCount} />
+            <Toggle label="Point Numbers" value={showPointNumbers} onChange={setShowPointNumbers} />
+            <Toggle label="Opponent Numbers" value={opponentNumbers} onChange={setOpponentNumbers} />
+            <Toggle label="Flip Board" value={flipped} onChange={setFlipped} />
+          </div>
+
+          {/* Speed section */}
+          <div style={{ padding: '10px 16px', borderTop: '1px solid var(--surface-2)' }}>
+            <div style={sectionLabel}>Speed</div>
+            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 6 }}>
+              {SPEEDS.map((s, i) => (
+                <PanelBtn key={s} onClick={() => setSpeed(s)} active={speed === s}>
+                  {SPEED_LABELS[i]}
+                </PanelBtn>
+              ))}
+              <PanelBtn onClick={() => setShowMoveList(v => !v)} active={showMoveList} title="Toggle move list">☰</PanelBtn>
+            </div>
           </div>
 
           {/* Flexible spacer */}

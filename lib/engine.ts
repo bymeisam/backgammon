@@ -59,15 +59,22 @@ function removeChecker(state: BoardState, point: number): void {
   if (ps.count === 0) state.points[point] = null
 }
 
+function toAbsolute(point: number, player: 1 | 2): number {
+  return player === 1 ? point : 25 - point
+}
+
 function applySubMove(state: BoardState, subMove: SubMove, player: 1 | 2): void {
   const opp = opponent(player)
   const oppKey = getBarKey(opp)
   const playerKey = getBarKey(player)
 
-  if (subMove.from === 'bar') {
+  const absFrom = subMove.from === 'bar' ? 'bar' : toAbsolute(subMove.from as number, player)
+  const absTo   = subMove.to === 'off'   ? 'off'  : toAbsolute(subMove.to as number, player)
+
+  if (absFrom === 'bar') {
     state.bar[playerKey]--
-    if (subMove.to !== 'off') {
-      const dest = subMove.to as number
+    if (absTo !== 'off') {
+      const dest = absTo as number
       const destState = state.points[dest]
       if (destState && destState.player === opp && destState.count === 1) {
         state.points[dest] = null
@@ -78,15 +85,15 @@ function applySubMove(state: BoardState, subMove: SubMove, player: 1 | 2): void 
     return
   }
 
-  if (subMove.to === 'off') {
-    removeChecker(state, subMove.from as number)
+  if (absTo === 'off') {
+    removeChecker(state, absFrom as number)
     if (player === 1) state.borneOff.p1++
     else state.borneOff.p2++
     return
   }
 
-  const from = subMove.from as number
-  const to = subMove.to as number
+  const from = absFrom as number
+  const to = absTo as number
   removeChecker(state, from)
   const destState = state.points[to]
   if (destState && destState.player === opp && destState.count === 1) {

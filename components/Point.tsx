@@ -8,6 +8,8 @@ interface PointProps {
   checkerSize: number
   pointWidth: number
   pointHeight: number
+  showPointNumbers: boolean
+  opponentNumbers: boolean
 }
 
 const MAX_VISIBLE = 5
@@ -19,6 +21,8 @@ export default function Point({
   checkerSize,
   pointWidth,
   pointHeight,
+  showPointNumbers,
+  opponentNumbers,
 }: PointProps) {
   const isA = absolutePoint % 2 === (isTop ? 1 : 0)
   const pointColor = isA ? 'var(--point-a)' : 'var(--point-b)'
@@ -87,24 +91,26 @@ export default function Point({
       />
 
       {/* Point number */}
-      <div
-        style={{
-          position: 'absolute',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          bottom: isTop ? undefined : 2,
-          top: isTop ? 2 : undefined,
-          fontSize: 9,
-          color: 'var(--text-secondary)',
-          lineHeight: 1,
-          userSelect: 'none',
-          width: 20,
-          textAlign: 'center',
-          zIndex: 2,
-        }}
-      >
-        {absolutePoint}
-      </div>
+      {showPointNumbers && (
+        <div
+          style={{
+            position: 'absolute',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            bottom: isTop ? undefined : 2,
+            top: isTop ? 2 : undefined,
+            fontSize: 9,
+            color: 'var(--text-secondary)',
+            lineHeight: 1,
+            userSelect: 'none',
+            width: 20,
+            textAlign: 'center',
+            zIndex: 2,
+          }}
+        >
+          {opponentNumbers ? 25 - absolutePoint : absolutePoint}
+        </div>
+      )}
 
       {/* Checkers */}
       <div style={stackStyle}>

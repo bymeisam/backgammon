@@ -22,10 +22,6 @@ function splitMoveLine(line: string): { moveNum: number; left: string; right: st
   return { moveNum, left, right }
 }
 
-function toAbsolute(raw: number, player: 1 | 2): number {
-  return player === 1 ? raw : 25 - raw
-}
-
 function parseSubMoveToken(token: string, player: 1 | 2): SubMove | null {
   const slash = token.indexOf('/')
   if (slash === -1) return null
@@ -33,16 +29,12 @@ function parseSubMoveToken(token: string, player: 1 | 2): SubMove | null {
   const rawTo = parseInt(token.slice(slash + 1), 10)
   if (isNaN(rawFrom) || isNaN(rawTo)) return null
 
-  let from: number | 'bar'
-  let to: number | 'off'
+  const from: number | 'bar' =
+    ((player === 1 && rawFrom === 25) || (player === 2 && rawFrom === 0))
+      ? 'bar'
+      : rawFrom
 
-  if ((player === 1 && rawFrom === 25) || (player === 2 && rawFrom === 0)) {
-    from = 'bar'
-  } else {
-    from = toAbsolute(rawFrom, player)
-  }
-
-  to = rawTo === 0 ? 'off' : toAbsolute(rawTo, player)
+  const to: number | 'off' = rawTo === 0 ? 'off' : rawTo
 
   return { from, to }
 }
