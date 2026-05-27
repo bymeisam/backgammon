@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+:root {
+  --board-bg: #0d1117;
+  --board-border: #1e2a3a;
+  --bar-bg: #080c12;
+  --point-a: #1a3a5c;
+  --point-b: #3d1a1a;
+  --checker-p1: #e8dcc8;
+  --checker-p1-shine: #f5f0e8;
+  --checker-p1-shadow: #c8b896;
+  --checker-p2: #1a1a1a;
+  --checker-p2-shine: #2d2d2d;
+  --checker-p2-shadow: #000000;
+  --checker-border-p1: rgba(255,255,255,0.2);
+  --checker-border-p2: rgba(255,255,255,0.08);
+  --accent: #4a9eff;
+  --accent-move: #ffd700;
+  --surface: #131820;
+  --surface-2: #1c2333;
+  --text-primary: #e8eaf0;
+  --text-secondary: #5a6a80;
+  --text-accent: #4a9eff;
+  --pip-count: #3a7acc;
+  --dice-bg: #f5f5f5;
+  --dice-dot: #111111;
+  --dice-shadow: rgba(0,0,0,0.5);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--board-bg);
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', monospace;
+  overflow: hidden;
+}
+
+.font-display { font-family: 'Playfair Display', serif; }
+.font-mono    { font-family: 'JetBrains Mono', monospace; }
