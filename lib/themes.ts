@@ -28,8 +28,8 @@ export const THEMES: Record<Theme, Record<string, string>> = {
     '--dice-shadow': 'rgba(0,0,0,0.5)',
     '--bearoff-top-bg': '#06080f',
     '--bearoff-bottom-bg': '#06080f',
-    '--bearoff-inset-bg': 'rgba(255,255,255,0.02)',
-    '--bearoff-inset-border': 'rgba(255,255,255,0.07)',
+    '--bearoff-inset-bg': 'rgba(255,255,255,0.07)',
+    '--bearoff-inset-border': 'rgba(255,255,255,0.18)',
   },
   'classic-dark': {
     '--board-bg': '#1a0e08',
@@ -58,8 +58,8 @@ export const THEMES: Record<Theme, Record<string, string>> = {
     '--dice-shadow': 'rgba(0,0,0,0.6)',
     '--bearoff-top-bg': '#06080f',
     '--bearoff-bottom-bg': '#06080f',
-    '--bearoff-inset-bg': 'rgba(255,200,100,0.03)',
-    '--bearoff-inset-border': 'rgba(255,180,60,0.1)',
+    '--bearoff-inset-bg': 'rgba(255,200,100,0.08)',
+    '--bearoff-inset-border': 'rgba(255,180,60,0.2)',
   },
   'green-felt': {
     '--board-bg': '#1a3d2b',
@@ -88,8 +88,8 @@ export const THEMES: Record<Theme, Record<string, string>> = {
     '--dice-shadow': 'rgba(0,0,0,0.5)',
     '--bearoff-top-bg': '#06080f',
     '--bearoff-bottom-bg': '#06080f',
-    '--bearoff-inset-bg': 'rgba(255,255,255,0.03)',
-    '--bearoff-inset-border': 'rgba(255,255,255,0.08)',
+    '--bearoff-inset-bg': 'rgba(255,255,255,0.08)',
+    '--bearoff-inset-border': 'rgba(255,255,255,0.2)',
   },
   'clean-light': {
     '--board-bg': '#f0ece4',
@@ -118,8 +118,8 @@ export const THEMES: Record<Theme, Record<string, string>> = {
     '--dice-shadow': 'rgba(0,0,0,0.2)',
     '--bearoff-top-bg': '#c0bcb4',
     '--bearoff-bottom-bg': '#c0bcb4',
-    '--bearoff-inset-bg': 'rgba(0,0,0,0.05)',
-    '--bearoff-inset-border': 'rgba(0,0,0,0.12)',
+    '--bearoff-inset-bg': 'rgba(0,0,0,0.08)',
+    '--bearoff-inset-border': 'rgba(0,0,0,0.2)',
   },
 }
 
