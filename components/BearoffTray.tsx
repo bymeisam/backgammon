@@ -35,61 +35,46 @@ function BearoffTrayHalf({
   return (
     <div
       data-checker-id={checkerId}
-      style={{
-        flex: 1,
-        position: "relative",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: stackDir === "down" ? "flex-start" : "flex-end",
-        paddingTop: stackDir === "down" ? TRAY_INNER_PADDING : 0,
-        paddingBottom: stackDir === "up" ? TRAY_INNER_PADDING : 0,
-        gap: RIM_GAP,
-        background: bg,
-        overflow: "hidden",
-      }}
+      className="flex-1 flex items-center justify-center overflow-hidden"
+      style={{ background: bg }}
     >
-      {/* Inner rectangle zone indicator */}
       <div
+        className={`flex flex-col items-center overflow-hidden rounded ${
+          stackDir === "down" ? "justify-start" : "justify-end"
+        }`}
         style={{
-          position: "absolute",
-          top: 5,
-          bottom: 5,
           width: rimWidth + 8,
-          left: "50%",
-          transform: "translateX(-50%)",
-          borderRadius: 3,
+          height: "calc(100% - 10px)",
           background: "var(--bearoff-inset-bg)",
           border: "1px solid var(--bearoff-inset-border)",
-          pointerEvents: "none",
+          paddingTop: stackDir === "down" ? TRAY_INNER_PADDING : 0,
+          paddingBottom: stackDir === "up" ? TRAY_INNER_PADDING : 0,
+          gap: RIM_GAP,
         }}
-      />
-
-      {Array.from({ length: count }).map((_, i) => (
-        <div
-          key={i}
-          style={{
-            width: rimWidth,
-            height: rimHeight,
-            flexShrink: 0,
-            borderRadius: 3,
-            position: "relative",
-            zIndex: 1,
-            background:
-              player === 1
-                ? "linear-gradient(to bottom, #f8f0dc 0%, #e8dcc8 40%, #b8a888 100%)"
-                : "linear-gradient(to bottom, #3a3a3a 0%, #1a1a1a 40%, #000000 100%)",
-            boxShadow:
-              player === 1
-                ? "0 2px 5px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3)"
-                : "0 2px 5px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.12)",
-            border:
-              player === 1
-                ? "1px solid rgba(255,255,255,0.25)"
-                : "1px solid rgba(255,255,255,0.18)",
-          }}
-        />
-      ))}
+      >
+        {Array.from({ length: count }).map((_, i) => (
+          <div
+            key={i}
+            className="shrink-0 rounded"
+            style={{
+              width: rimWidth,
+              height: rimHeight,
+              background:
+                player === 1
+                  ? "linear-gradient(to bottom, #f8f0dc 0%, #e8dcc8 40%, #b8a888 100%)"
+                  : "linear-gradient(to bottom, #3a3a3a 0%, #1a1a1a 40%, #000000 100%)",
+              boxShadow:
+                player === 1
+                  ? "0 2px 5px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3)"
+                  : "0 2px 5px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.12)",
+              border:
+                player === 1
+                  ? "1px solid rgba(255,255,255,0.25)"
+                  : "1px solid rgba(255,255,255,0.18)",
+            }}
+          />
+        ))}
+      </div>
     </div>
   );
 }
@@ -128,20 +113,15 @@ export default function BearoffTray({
   const bottomPlayer = flipped ? 2 : 1;
   const topCount = flipped ? p1Count : p2Count;
   const bottomCount = flipped ? p2Count : p1Count;
-
   const halfHeight = Math.floor((dims.height - 2) / 2);
 
   return (
     <div
       ref={containerRef}
+      className="flex flex-col shrink-0 overflow-hidden h-full"
       style={{
         width: Math.round(checkerSize * 1.1),
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        flexShrink: 0,
         borderLeft: "2px solid var(--board-border)",
-        overflow: "hidden",
       }}
     >
       <BearoffTrayHalf
@@ -156,7 +136,8 @@ export default function BearoffTray({
       />
 
       <div
-        style={{ height: 2, background: "var(--board-border)", flexShrink: 0 }}
+        className="shrink-0"
+        style={{ height: 2, background: "var(--board-border)" }}
       />
 
       <BearoffTrayHalf
