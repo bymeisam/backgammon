@@ -1,19 +1,79 @@
-function BearoffChecker({ player, checkerSize }: { player: 1 | 2; checkerSize: number }) {
-  const rimHeight = Math.round(checkerSize * 0.32)
+'use client'
+
+import { useRef, useEffect, useState } from 'react'
+
+const MAX_CHECKERS = 15
+const RIM_GAP = 3
+const TRAY_INNER_PADDING = 6
+
+interface BearoffHalfProps {
+  player: 1 | 2
+  count: number
+  checkerSize: number
+  halfHeight: number
+  trayWidth: number
+  stackDir: 'down' | 'up'
+  bg: string
+  checkerId: string
+}
+
+function BearoffTrayHalf({ player, count, checkerSize, halfHeight, trayWidth, stackDir, bg, checkerId }: BearoffHalfProps) {
+  const available = halfHeight - TRAY_INNER_PADDING * 2 - (MAX_CHECKERS - 1) * RIM_GAP
+  const rimHeight = Math.max(2, Math.floor(available / MAX_CHECKERS))
+  const rimWidth = Math.min(Math.round(checkerSize * 1.05), trayWidth - 10)
+
   return (
-    <div style={{
-      width: checkerSize,
-      height: rimHeight,
-      flexShrink: 0,
-      borderRadius: 3,
-      background: player === 1
-        ? 'linear-gradient(to bottom, var(--checker-p1-shine), var(--checker-p1) 40%, var(--checker-p1-shadow))'
-        : 'linear-gradient(to bottom, var(--checker-p2-shine), var(--checker-p2) 40%, var(--checker-p2-shadow))',
-      boxShadow: '0 1px 3px rgba(0,0,0,0.35)',
-      border: player === 1
-        ? '1px solid var(--checker-border-p1)'
-        : '1px solid var(--checker-border-p2)',
-    }} />
+    <div
+      data-checker-id={checkerId}
+      style={{
+        flex: 1,
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: stackDir === 'down' ? 'flex-start' : 'flex-end',
+        paddingTop: stackDir === 'down' ? TRAY_INNER_PADDING : 0,
+        paddingBottom: stackDir === 'up' ? TRAY_INNER_PADDING : 0,
+        gap: RIM_GAP,
+        background: bg,
+        overflow: 'hidden',
+      }}
+    >
+      {/* Inner rectangle zone indicator */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: '5px 4px',
+          borderRadius: 3,
+          background: 'var(--bearoff-inset-bg)',
+          border: '1px solid var(--bearoff-inset-border)',
+          pointerEvents: 'none',
+        }}
+      />
+
+      {Array.from({ length: count }).map((_, i) => (
+        <div
+          key={i}
+          style={{
+            width: rimWidth,
+            height: rimHeight,
+            flexShrink: 0,
+            borderRadius: 3,
+            position: 'relative',
+            zIndex: 1,
+            background: player === 1
+              ? 'linear-gradient(to bottom, #f8f0dc 0%, #e8dcc8 40%, #b8a888 100%)'
+              : 'linear-gradient(to bottom, #3a3a3a 0%, #1a1a1a 40%, #000000 100%)',
+            boxShadow: player === 1
+              ? '0 2px 5px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3)'
+              : '0 2px 5px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.12)',
+            border: player === 1
+              ? '1px solid rgba(255,255,255,0.25)'
+              : '1px solid rgba(255,255,255,0.18)',
+          }}
+        />
+      ))}
+    </div>
   )
 }
 
@@ -25,64 +85,63 @@ interface BearoffTrayProps {
 }
 
 export default function BearoffTray({ p1Count, p2Count, checkerSize, flipped }: BearoffTrayProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [dims, setDims] = useState({ width: Math.round(checkerSize * 1.45), height: 200 })
+
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    const ro = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect
+      setDims({ width, height })
+    })
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+
   const topPlayer    = flipped ? 1 : 2
   const bottomPlayer = flipped ? 2 : 1
   const topCount     = flipped ? p1Count : p2Count
   const bottomCount  = flipped ? p2Count : p1Count
 
-  return (
-    <div style={{
-      width: checkerSize + 10,
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      flexShrink: 0,
-      borderLeft: '2px solid var(--board-border)',
-    }}>
-      {/* Top half — stack downward from top */}
-      <div
-        data-checker-id={`p${topPlayer}-bearoff`}
-        style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          paddingTop: 6,
-          paddingBottom: 4,
-          gap: 2,
-          background: 'var(--bearoff-top-bg)',
-          overflow: 'hidden',
-        }}
-      >
-        {Array.from({ length: topCount }).map((_, i) => (
-          <BearoffChecker key={i} player={topPlayer} checkerSize={checkerSize} />
-        ))}
-      </div>
+  const halfHeight = Math.floor((dims.height - 2) / 2)
 
-      {/* Divider */}
+  return (
+    <div
+      ref={containerRef}
+      style={{
+        width: Math.round(checkerSize * 1.45),
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        flexShrink: 0,
+        borderLeft: '2px solid var(--board-border)',
+        overflow: 'hidden',
+      }}
+    >
+      <BearoffTrayHalf
+        player={topPlayer}
+        count={topCount}
+        checkerSize={checkerSize}
+        halfHeight={halfHeight}
+        trayWidth={dims.width}
+        stackDir="down"
+        bg="var(--bearoff-top-bg)"
+        checkerId={`p${topPlayer}-bearoff`}
+      />
+
       <div style={{ height: 2, background: 'var(--board-border)', flexShrink: 0 }} />
 
-      {/* Bottom half — stack upward from bottom */}
-      <div
-        data-checker-id={`p${bottomPlayer}-bearoff`}
-        style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'flex-end',
-          paddingBottom: 6,
-          paddingTop: 4,
-          gap: 2,
-          background: 'var(--bearoff-bottom-bg)',
-          overflow: 'hidden',
-        }}
-      >
-        {Array.from({ length: bottomCount }).map((_, i) => (
-          <BearoffChecker key={i} player={bottomPlayer} checkerSize={checkerSize} />
-        ))}
-      </div>
+      <BearoffTrayHalf
+        player={bottomPlayer}
+        count={bottomCount}
+        checkerSize={checkerSize}
+        halfHeight={halfHeight}
+        trayWidth={dims.width}
+        stackDir="up"
+        bg="var(--bearoff-bottom-bg)"
+        checkerId={`p${bottomPlayer}-bearoff`}
+      />
     </div>
   )
 }

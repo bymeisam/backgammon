@@ -6,7 +6,6 @@ import { deepClone, applySubMoveToState } from '@/lib/engine'
 import { calcPipCount } from '@/lib/pip'
 import { animateCheckerArc, getCheckerCenter } from '@/lib/animator'
 import Board, { BOARD_NATURAL_WIDTH, BOARD_NATURAL_HEIGHT } from './Board'
-import PointNumberStrip, { STRIP_HEIGHT } from './PointNumberStrip'
 import BoardSideStrip from './BoardSideStrip'
 import MoveListPanel from './MoveListPanel'
 import ThemeSwitcher from './ThemeSwitcher'
@@ -173,22 +172,21 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
     try { return localStorage.getItem('bgv-opponent-numbers') === 'true' } catch { return false }
   })
 
-  // Board scaling — account for point number strips above and below
+  // Board scaling — strips are inside BOARD_NATURAL_HEIGHT now
   const boardContainerRef = useRef<HTMLDivElement | null>(null)
   const [boardScale, setBoardScale] = useState(1)
-  const naturalH = BOARD_NATURAL_HEIGHT + STRIP_HEIGHT * 2
 
   useEffect(() => {
     const container = boardContainerRef.current
     if (!container) return
     const observer = new ResizeObserver(([entry]) => {
       const { width, height } = entry.contentRect
-      const scale = Math.min(width / BOARD_NATURAL_WIDTH, height / naturalH) * 0.97
+      const scale = Math.min(width / BOARD_NATURAL_WIDTH, height / BOARD_NATURAL_HEIGHT) * 0.97
       setBoardScale(Math.max(0.1, scale))
     })
     observer.observe(container)
     return () => observer.disconnect()
-  }, [naturalH])
+  }, [])
 
   // Fixed-position animation overlay
   const overlayRef = useRef<HTMLDivElement | null>(null)
@@ -314,28 +312,15 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
             style={{
               transformOrigin: 'center center',
               transform: `scale(${boardScale})`,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
             }}
           >
-            <PointNumberStrip
-              position="top"
-              flipped={flipped}
-              opponentNumbers={opponentNumbers}
-              visible={showPointNumbers}
-            />
             <Board
               state={currentSnapshot.state}
               flipped={flipped}
               pipCount={pip}
               showPipCount={showPipCount}
-            />
-            <PointNumberStrip
-              position="bottom"
-              flipped={flipped}
+              showPointNumbers={showPointNumbers}
               opponentNumbers={opponentNumbers}
-              visible={showPointNumbers}
             />
           </div>
         </div>

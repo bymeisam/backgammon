@@ -26,8 +26,10 @@
   --dice-bg: #f5f5f5;
   --dice-dot: #111111;
   --dice-shadow: rgba(0,0,0,0.5);
-  --bearoff-top-bg: #0a0e18;
-  --bearoff-bottom-bg: #0d1220;
+  --bearoff-top-bg: #06080f;
+  --bearoff-bottom-bg: #06080f;
+  --bearoff-inset-bg: rgba(255,255,255,0.02);
+  --bearoff-inset-border: rgba(255,255,255,0.07);
 }
 
 * { box-sizing: border-box; }

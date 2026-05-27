@@ -8,35 +8,39 @@ interface CheckerProps {
 
 export default function Checker({ player, size, checkerId, label, style }: CheckerProps) {
   const isP1 = player === 1
-  const bg = isP1
-    ? `radial-gradient(circle at 35% 35%, var(--checker-p1-shine) 0%, var(--checker-p1) 50%, var(--checker-p1-shadow) 100%)`
-    : `radial-gradient(circle at 35% 35%, var(--checker-p2-shine) 0%, var(--checker-p2) 50%, var(--checker-p2-shadow) 100%)`
 
-  const border = isP1 ? 'var(--checker-border-p1)' : 'var(--checker-border-p2)'
-  const shadow = isP1
-    ? '0 2px 4px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15)'
-    : '0 2px 4px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)'
+  const base: React.CSSProperties = {
+    width: size,
+    height: size,
+    borderRadius: '50%',
+    boxSizing: 'border-box',
+    flexShrink: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 
-  // P1 is always light (ivory), P2 is always dark or deep-colored → white label
+  const p1Style: React.CSSProperties = {
+    ...base,
+    background: `radial-gradient(circle at 35% 35%, var(--checker-p1-shine) 0%, var(--checker-p1) 55%, var(--checker-p1-shadow) 100%)`,
+    border: '1.5px solid rgba(200,185,150,0.4)',
+    boxShadow: '0 2px 5px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2)',
+  }
+
+  const p2Style: React.CSSProperties = {
+    ...base,
+    background: `radial-gradient(circle at 33% 33%, #3d3d3d 0%, #1a1a1a 45%, #000000 100%)`,
+    border: '1.5px solid rgba(255,255,255,0.28)',
+    boxShadow: '0 2px 5px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08)',
+  }
+
+  const checkerStyle = isP1 ? p1Style : p2Style
   const textColor = isP1 ? 'rgba(0,0,0,0.75)' : 'rgba(255,255,255,0.9)'
 
   return (
     <div
       data-checker-id={checkerId}
-      style={{
-        width: size,
-        height: size,
-        borderRadius: '50%',
-        background: bg,
-        border: `1.5px solid ${border}`,
-        boxShadow: shadow,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexShrink: 0,
-        position: 'relative',
-        ...style,
-      }}
+      style={{ ...checkerStyle, ...style }}
     >
       {label !== undefined && (
         <span

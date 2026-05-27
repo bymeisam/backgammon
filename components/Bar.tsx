@@ -28,12 +28,13 @@ function BarChecker({ count, player, checkerSize }: BarCheckerProps) {
     }}>
       {count > 1 && (
         <span style={{
-          fontSize: checkerSize * 0.38,
-          fontWeight: 700,
-          color: player === 1 ? 'var(--checker-p1-shadow)' : 'var(--checker-p2-shine)',
+          fontSize: checkerSize * 0.40,
+          fontWeight: 800,
+          color: player === 1 ? 'rgba(0,0,0,0.75)' : '#ffffff',
           fontFamily: 'var(--font-mono)',
           lineHeight: 1,
           userSelect: 'none',
+          textShadow: player === 1 ? 'none' : '0 1px 2px rgba(0,0,0,0.8)',
         }}>
           {count}
         </span>
