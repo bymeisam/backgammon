@@ -53,6 +53,7 @@ function PointNumberStrip({
 
   return (
     <div
+      data-id="board-point-number-strip"
       style={{
         height: STRIP_HEIGHT,
         display: 'flex',
@@ -68,21 +69,21 @@ function PointNumberStrip({
       }}
     >
       {/* Play area: left 6 | bar gap | right 6 — aligned to triangle centers */}
-      <div style={{ width: BOARD_CONTENT_WIDTH, display: 'flex', alignItems: 'center' }}>
-        <div style={{ flex: 1, display: 'flex' }}>
+      <div data-id="board-number-strip-play-area" style={{ width: BOARD_CONTENT_WIDTH, display: 'flex', alignItems: 'center' }}>
+        <div data-id="board-number-strip-left" style={{ flex: 1, display: 'flex' }}>
           {left.map((p) => (
-            <div key={p} style={numStyle}>{opponentNumbers ? 25 - p : p}</div>
+            <div data-id={`board-number-strip-left-${p}`} key={p} style={numStyle}>{opponentNumbers ? 25 - p : p}</div>
           ))}
         </div>
-        <div style={{ width: BAR_WIDTH, flexShrink: 0 }} />
-        <div style={{ flex: 1, display: 'flex' }}>
+        <div data-id="board-number-strip-bar-gap" style={{ width: BAR_WIDTH, flexShrink: 0 }} />
+        <div data-id="board-number-strip-right" style={{ flex: 1, display: 'flex' }}>
           {right.map((p) => (
-            <div key={p} style={numStyle}>{opponentNumbers ? 25 - p : p}</div>
+            <div data-id={`board-number-strip-right-${p}`} key={p} style={numStyle}>{opponentNumbers ? 25 - p : p}</div>
           ))}
         </div>
       </div>
       {/* Spacer over bearoff tray */}
-      <div style={{ flex: 1 }} />
+      <div data-id="board-number-strip-tray-spacer" style={{ flex: 1 }} />
     </div>
   )
 }
@@ -99,8 +100,9 @@ export default function Board({ state, flipped, pipCount, showPipCount, showPoin
     : [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
 
   function renderHalf(points: number[], isTop: boolean) {
+    const half = isTop ? 'top' : 'bottom'
     return (
-      <div style={{ display: 'flex', height: POINT_HEIGHT }}>
+      <div data-id={`board-half-${half}`} style={{ display: 'flex', height: POINT_HEIGHT }}>
         {points.slice(0, 6).map((abs) => (
           <Point
             key={abs}
@@ -112,7 +114,7 @@ export default function Board({ state, flipped, pipCount, showPipCount, showPoin
             pointHeight={POINT_HEIGHT}
           />
         ))}
-        <div style={{ width: BAR_WIDTH, flexShrink: 0 }} />
+        <div data-id={`board-half-${half}-bar-gap`} style={{ width: BAR_WIDTH, flexShrink: 0 }} />
         {points.slice(6).map((abs) => (
           <Point
             key={abs}
@@ -130,6 +132,7 @@ export default function Board({ state, flipped, pipCount, showPipCount, showPoin
 
   return (
     <div
+      data-id="board-root"
       style={{
         width: BOARD_NATURAL_WIDTH,
         height: BOARD_NATURAL_HEIGHT,
@@ -145,6 +148,7 @@ export default function Board({ state, flipped, pipCount, showPipCount, showPoin
     >
       {/* Noise texture */}
       <div
+        data-id="board-noise-texture"
         style={{
           position: 'absolute',
           inset: 0,
@@ -164,15 +168,16 @@ export default function Board({ state, flipped, pipCount, showPipCount, showPoin
       />
 
       {/* Main content row: play area + bearoff */}
-      <div style={{ flex: 1, display: 'flex', minHeight: 0 }}>
+      <div data-id="board-content-row" style={{ flex: 1, display: 'flex', minHeight: 0 }}>
         {/* Play area */}
-        <div style={{ width: BOARD_CONTENT_WIDTH, height: '100%', position: 'relative', flexShrink: 0 }}>
-          <div style={{ paddingTop: GUTTER }}>{renderHalf(topRow, true)}</div>
-          <div style={{ height: 16, background: 'var(--bar-bg)' }} />
-          <div style={{ paddingBottom: GUTTER }}>{renderHalf(bottomRow, false)}</div>
+        <div data-id="board-play-area" style={{ width: BOARD_CONTENT_WIDTH, height: '100%', position: 'relative', flexShrink: 0 }}>
+          <div data-id="board-top-gutter" style={{ paddingTop: GUTTER }}>{renderHalf(topRow, true)}</div>
+          <div data-id="board-middle-bar-bg" style={{ height: 16, background: 'var(--bar-bg)' }} />
+          <div data-id="board-bottom-gutter" style={{ paddingBottom: GUTTER }}>{renderHalf(bottomRow, false)}</div>
 
           {/* Bar column */}
           <div
+            data-id="board-bar-column"
             style={{
               position: 'absolute',
               left: POINT_WIDTH * 6,

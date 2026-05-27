@@ -86,6 +86,7 @@ export default function MoveRow({
 
   return (
     <div
+      data-id="move-row-root"
       ref={isActiveRow ? rowRef : undefined}
       style={{
         display: 'flex',
@@ -95,6 +96,7 @@ export default function MoveRow({
       }}
     >
       <div
+        data-id="move-row-number"
         style={{
           width: 28,
           flexShrink: 0,
@@ -108,6 +110,7 @@ export default function MoveRow({
       </div>
 
       <div
+        data-id="move-row-left-cell"
         style={cellStyle(leftActive, leftIdx !== null)}
         onClick={() => leftIdx !== null && onJump(leftIdx)}
         onMouseEnter={(e) => {
@@ -123,6 +126,7 @@ export default function MoveRow({
       </div>
 
       <div
+        data-id="move-row-right-cell"
         style={cellStyle(rightActive, rightIdx !== null)}
         onClick={() => rightIdx !== null && onJump(rightIdx)}
         onMouseEnter={(e) => {

@@ -5,6 +5,7 @@ import { forwardRef } from 'react'
 const AnimationOverlay = forwardRef<HTMLDivElement>((_, ref) => {
   return (
     <div
+      data-id="animation-overlay-canvas"
       ref={ref}
       style={{
         position: 'absolute',

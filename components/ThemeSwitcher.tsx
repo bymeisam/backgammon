@@ -21,10 +21,11 @@ export default function ThemeSwitcher() {
   }
 
   return (
-    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+    <div data-id="theme-switcher-root" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
       {(Object.keys(THEMES) as Theme[]).map((t) => (
         <button
           key={t}
+          data-id={`theme-switcher-swatch-${t}`}
           title={THEME_LABELS[t]}
           onClick={() => applyTheme(t)}
           style={{

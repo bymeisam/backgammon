@@ -32,13 +32,17 @@ function BearoffTrayHalf({
   const rimHeight = Math.max(2, Math.floor((available / MAX_CHECKERS) * 0.6));
   const rimWidth = Math.min(Math.round(checkerSize * 0.72), trayWidth - 10);
 
+  const side = stackDir === "down" ? "top" : "bottom";
+
   return (
     <div
+      data-id={`bearoff-half-${side}`}
       data-checker-id={checkerId}
       className="flex-1 flex items-center justify-center overflow-hidden"
       style={{ background: bg }}
     >
       <div
+        data-id={`bearoff-inset-${side}`}
         className={`flex flex-col items-center overflow-hidden rounded ${
           stackDir === "down" ? "justify-start" : "justify-end"
         }`}
@@ -55,6 +59,7 @@ function BearoffTrayHalf({
         {Array.from({ length: count }).map((_, i) => (
           <div
             key={i}
+            data-id={`bearoff-rim-${side}-${i}`}
             className="shrink-0 rounded"
             style={{
               width: rimWidth,
@@ -118,6 +123,7 @@ export default function BearoffTray({
   return (
     <div
       ref={containerRef}
+      data-id="bearoff-tray"
       className="flex flex-col shrink-0 overflow-hidden h-full"
       style={{
         width: Math.round(checkerSize * 1.4),
@@ -136,6 +142,7 @@ export default function BearoffTray({
       />
 
       <div
+        data-id="bearoff-divider"
         className="shrink-0"
         style={{ height: 2, background: "var(--board-border)" }}
       />

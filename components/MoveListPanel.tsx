@@ -77,6 +77,7 @@ export default function MoveListPanel({
 
   return (
     <div
+      data-id="move-list-panel-outer"
       style={{
         width: visible ? panelWidth : 0,
         overflow: 'hidden',
@@ -85,6 +86,7 @@ export default function MoveListPanel({
       }}
     >
       <div
+        data-id="move-list-panel-inner"
         style={{
           width: panelWidth,
           height: '100%',
@@ -96,6 +98,7 @@ export default function MoveListPanel({
       >
         {/* Game tabs */}
         <div
+          data-id="move-list-panel-game-tabs"
           style={{
             display: 'flex',
             borderBottom: '1px solid var(--surface-2)',
@@ -105,6 +108,7 @@ export default function MoveListPanel({
           {match.games.map((g, idx) => (
             <button
               key={idx}
+              data-id={`move-list-panel-game-tab-${idx}`}
               onClick={() => onJumpTo(idx, 0)}
               style={{
                 flex: 1,
@@ -125,6 +129,7 @@ export default function MoveListPanel({
 
         {/* Column headers */}
         <div
+          data-id="move-list-panel-column-headers"
           style={{
             display: 'flex',
             padding: '4px 0',
@@ -132,17 +137,17 @@ export default function MoveListPanel({
             flexShrink: 0,
           }}
         >
-          <div style={{ width: 28 }} />
-          <div style={{ flex: 1, fontSize: 10, color: 'var(--text-secondary)', paddingLeft: 8 }}>
+          <div data-id="move-list-panel-header-spacer" style={{ width: 28 }} />
+          <div data-id="move-list-panel-header-p1" style={{ flex: 1, fontSize: 10, color: 'var(--text-secondary)', paddingLeft: 8 }}>
             {flipped ? match.player2 : match.player1}
           </div>
-          <div style={{ flex: 1, fontSize: 10, color: 'var(--text-secondary)', paddingLeft: 8 }}>
+          <div data-id="move-list-panel-header-p2" style={{ flex: 1, fontSize: 10, color: 'var(--text-secondary)', paddingLeft: 8 }}>
             {flipped ? match.player1 : match.player2}
           </div>
         </div>
 
         {/* Move rows */}
-        <div style={{ overflow: 'auto', flex: 1 }}>
+        <div data-id="move-list-panel-rows" style={{ overflow: 'auto', flex: 1 }}>
           {rows.map((row) => (
             <MoveRow
               key={row.moveNumber}
@@ -162,6 +167,7 @@ export default function MoveListPanel({
         {/* Win result */}
         {game.winner && (
           <div
+            data-id="move-list-panel-win-result"
             style={{
               padding: '8px 12px',
               fontSize: 12,

@@ -33,6 +33,7 @@ export default function FileUpload({ onFile }: FileUploadProps) {
 
   return (
     <div
+      data-id="file-upload-drop-zone"
       onDragOver={(e) => { e.preventDefault(); setDragging(true) }}
       onDragLeave={() => setDragging(false)}
       onDrop={handleDrop}
@@ -49,14 +50,15 @@ export default function FileUpload({ onFile }: FileUploadProps) {
         width: '100%',
       }}
     >
-      <div style={{ fontSize: 48, marginBottom: 12 }}>🎲</div>
-      <p style={{ color: 'var(--text-primary)', marginBottom: 4, fontSize: 16 }}>
+      <div data-id="file-upload-icon" style={{ fontSize: 48, marginBottom: 12 }}>🎲</div>
+      <p data-id="file-upload-primary-label" style={{ color: 'var(--text-primary)', marginBottom: 4, fontSize: 16 }}>
         Drop your .txt match file here
       </p>
-      <p style={{ color: 'var(--text-secondary)', fontSize: 12 }}>
+      <p data-id="file-upload-secondary-label" style={{ color: 'var(--text-secondary)', fontSize: 12 }}>
         or click to browse
       </p>
       <input
+        data-id="file-upload-input"
         ref={inputRef}
         type="file"
         accept=".txt"

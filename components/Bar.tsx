@@ -7,7 +7,7 @@ interface BarCheckerProps {
 function BarChecker({ count, player, checkerSize }: BarCheckerProps) {
   const visible = count > 0
   return (
-    <div style={{
+    <div data-id="bar-checker" style={{
       visibility: visible ? 'visible' : 'hidden',
       opacity: visible ? 1 : 0,
       transition: 'opacity 150ms ease',
@@ -27,7 +27,7 @@ function BarChecker({ count, player, checkerSize }: BarCheckerProps) {
       flexShrink: 0,
     }}>
       {count > 1 && (
-        <span style={{
+        <span data-id="bar-checker-count" style={{
           fontSize: checkerSize * 0.40,
           fontWeight: 800,
           color: player === 1 ? 'rgba(0,0,0,0.75)' : '#ffffff',
@@ -45,7 +45,7 @@ function BarChecker({ count, player, checkerSize }: BarCheckerProps) {
 
 function BarPipCount({ pip, visible }: { pip: number; visible: boolean }) {
   return (
-    <div style={{
+    <div data-id="bar-pip-count" style={{
       visibility: visible ? 'visible' : 'hidden',
       opacity: visible ? 1 : 0,
       transition: 'opacity 150ms ease',
@@ -82,7 +82,7 @@ export default function Bar({ bar, pipCount, showPipCount, flipped, barWidth, ch
     : { player: 1 as const, barCount: bar.p1, pip: pipCount.p1 }
 
   return (
-    <div style={{
+    <div data-id="bar-root" style={{
       width: barWidth,
       height: '100%',
       background: 'var(--bar-bg)',
@@ -94,13 +94,13 @@ export default function Bar({ bar, pipCount, showPipCount, flipped, barWidth, ch
       flexShrink: 0,
     }}>
       {/* Top half: pip outer (top), checker inner (toward center) */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+      <div data-id="bar-top-player" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
         <BarPipCount pip={top.pip} visible={showPipCount} />
         <BarChecker count={top.barCount} player={top.player} checkerSize={checkerSize} />
       </div>
 
       {/* Bottom half: checker inner (toward center), pip outer (bottom) */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+      <div data-id="bar-bottom-player" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
         <BarChecker count={bottom.barCount} player={bottom.player} checkerSize={checkerSize} />
         <BarPipCount pip={bottom.pip} visible={showPipCount} />
       </div>

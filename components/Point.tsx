@@ -61,9 +61,9 @@ export default function Point({
   }
 
   return (
-    <div style={{ position: 'relative', width: pointWidth, height: pointHeight, flexShrink: 0 }}>
-      <div style={{ position: 'absolute', inset: 0, clipPath, background: pointColor, opacity: 0.85 }} />
-      <div style={stackStyle}>{checkers}</div>
+    <div data-id={`point-root-${absolutePoint}`} style={{ position: 'relative', width: pointWidth, height: pointHeight, flexShrink: 0 }}>
+      <div data-id={`point-triangle-${absolutePoint}`} style={{ position: 'absolute', inset: 0, clipPath, background: pointColor, opacity: 0.85 }} />
+      <div data-id={`point-checker-stack-${absolutePoint}`} style={stackStyle}>{checkers}</div>
     </div>
   )
 }

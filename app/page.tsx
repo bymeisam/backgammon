@@ -26,19 +26,20 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-8">
+    <div data-id="page-root" className="min-h-screen flex flex-col items-center justify-center p-8">
       <h1
+        data-id="page-title"
         className="text-4xl font-bold mb-2 font-display"
         style={{ color: 'var(--text-primary)' }}
       >
         Backgammon Replay
       </h1>
-      <p className="text-sm mb-8" style={{ color: 'var(--text-secondary)' }}>
+      <p data-id="page-subtitle" className="text-sm mb-8" style={{ color: 'var(--text-secondary)' }}>
         Upload a Backgammon Galaxy match file to replay
       </p>
       <FileUpload onFile={handleFile} />
       {error && (
-        <p className="mt-4 text-sm" style={{ color: '#e74c3c' }}>
+        <p data-id="page-error" className="mt-4 text-sm" style={{ color: '#e74c3c' }}>
           {error}
         </p>
       )}

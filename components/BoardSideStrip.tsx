@@ -25,6 +25,7 @@ function DieDots({ value }: { value: number }) {
       {dots.map(([x, y], i) => (
         <div
           key={i}
+          data-id={`board-side-strip-die-dot-${i}`}
           style={{
             position: 'absolute',
             width: dotSize,
@@ -44,6 +45,7 @@ function DieDots({ value }: { value: number }) {
 function Die({ value }: { value: number | null }) {
   return (
     <div
+      data-id="board-side-strip-die"
       style={{
         width: DIE_SIZE,
         height: DIE_SIZE,
@@ -63,7 +65,7 @@ function Die({ value }: { value: number | null }) {
 
 function DicePair({ dice }: { dice: [number, number] | null }) {
   return (
-    <div style={{ display: 'flex', gap: 4 }}>
+    <div data-id="board-side-strip-dice-pair" style={{ display: 'flex', gap: 4 }}>
       <Die value={dice?.[0] ?? null} />
       <Die value={dice?.[1] ?? null} />
     </div>
@@ -73,6 +75,7 @@ function DicePair({ dice }: { dice: [number, number] | null }) {
 function PlayerNameLabel({ name }: { name: string }) {
   return (
     <div
+      data-id="board-side-strip-player-name"
       style={{
         fontSize: 11,
         fontWeight: 600,
@@ -101,6 +104,7 @@ export default function BoardSideStrip({ match, currentMove, flipped }: BoardSid
 
   return (
     <div
+      data-id="board-side-strip-root"
       style={{
         width: 80,
         height: '100%',
@@ -115,13 +119,13 @@ export default function BoardSideStrip({ match, currentMove, flipped }: BoardSid
       }}
     >
       {/* Top player */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+      <div data-id="board-side-strip-top-player" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
         <PlayerNameLabel name={topName} />
         <DicePair dice={topDice} />
       </div>
 
       {/* Bottom player */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+      <div data-id="board-side-strip-bottom-player" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
         <DicePair dice={botDice} />
         <PlayerNameLabel name={botName} />
       </div>

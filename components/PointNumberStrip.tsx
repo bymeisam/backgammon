@@ -20,6 +20,7 @@ export default function PointNumberStrip({ position, flipped, opponentNumbers, v
 
   return (
     <div
+      data-id="point-number-strip-root"
       style={{
         visibility: visible ? 'visible' : 'hidden',
         opacity: visible ? 1 : 0,
@@ -34,6 +35,7 @@ export default function PointNumberStrip({ position, flipped, opponentNumbers, v
       {points.slice(0, 6).map((p) => (
         <div
           key={p}
+          data-id={`point-number-strip-left-${p}`}
           style={{
             width: POINT_WIDTH,
             flexShrink: 0,
@@ -48,10 +50,11 @@ export default function PointNumberStrip({ position, flipped, opponentNumbers, v
         </div>
       ))}
       {/* Bar gap */}
-      <div style={{ width: BAR_WIDTH, flexShrink: 0 }} />
+      <div data-id="point-number-strip-bar-gap" style={{ width: BAR_WIDTH, flexShrink: 0 }} />
       {points.slice(6).map((p) => (
         <div
           key={p}
+          data-id={`point-number-strip-right-${p}`}
           style={{
             width: POINT_WIDTH,
             flexShrink: 0,

@@ -88,17 +88,18 @@ function Toggle({ label, value, onChange }: {
 }) {
   return (
     <div
+      data-id="match-viewer-toggle"
       onClick={() => onChange(!value)}
       style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '7px 0' }}
     >
-      <div style={{ color: 'var(--text-primary)', fontSize: 12, fontWeight: 500 }}>{label}</div>
-      <div style={{
+      <div data-id="match-viewer-toggle-label" style={{ color: 'var(--text-primary)', fontSize: 12, fontWeight: 500 }}>{label}</div>
+      <div data-id="match-viewer-toggle-track" style={{
         width: 36, height: 20, borderRadius: 10,
         background: value ? 'var(--accent)' : 'var(--surface-2)',
         position: 'relative', transition: 'background 150ms ease',
         flexShrink: 0, marginLeft: 12,
       }}>
-        <div style={{
+        <div data-id="match-viewer-toggle-thumb" style={{
           width: 14, height: 14, borderRadius: '50%',
           background: '#fff',
           position: 'absolute',
@@ -125,6 +126,7 @@ function PanelBtn({
 }) {
   return (
     <button
+      data-id="match-viewer-panel-btn"
       onClick={onClick}
       disabled={disabled}
       title={title}
@@ -283,7 +285,7 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
   return (
     <>
       {/* 4-column layout: move list | board | side strip | controls */}
-      <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
+      <div data-id="match-viewer-layout" style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
 
         {/* Col 1: collapsible move list */}
         <MoveListPanel
@@ -297,6 +299,7 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
 
         {/* Col 2: board + point number strips, scales to fill */}
         <div
+          data-id="match-viewer-board-container"
           ref={boardContainerRef}
           style={{
             flex: 1,
@@ -309,6 +312,7 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
           }}
         >
           <div
+            data-id="match-viewer-board-scaler"
             style={{
               transformOrigin: 'center center',
               transform: `scale(${boardScale})`,
@@ -334,6 +338,7 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
 
         {/* Col 4: controls panel */}
         <aside
+          data-id="match-viewer-controls-panel"
           style={{
             width: 200,
             height: '100vh',
@@ -346,8 +351,9 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
           }}
         >
           {/* Back + match info */}
-          <div style={{ padding: '10px 16px', borderBottom: '1px solid var(--surface-2)', flexShrink: 0 }}>
+          <div data-id="match-viewer-match-info" style={{ padding: '10px 16px', borderBottom: '1px solid var(--surface-2)', flexShrink: 0 }}>
             <button
+              data-id="match-viewer-back-btn"
               onClick={onReset}
               style={{
                 background: 'none',
@@ -363,14 +369,14 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
             >
               ← Back
             </button>
-            <div style={{ fontSize: 10, color: 'var(--text-secondary)', lineHeight: 1.4 }}>
-              <div>{match.player1} vs {match.player2}</div>
-              <div>{match.matchLength}pt · {match.eventDate}</div>
+            <div data-id="match-viewer-match-details" style={{ fontSize: 10, color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+              <div data-id="match-viewer-players">{match.player1} vs {match.player2}</div>
+              <div data-id="match-viewer-meta">{match.matchLength}pt · {match.eventDate}</div>
             </div>
           </div>
 
           {/* Play controls */}
-          <div style={{ padding: '10px 16px', borderBottom: '1px solid var(--surface-2)', display: 'flex', gap: 6, justifyContent: 'center' }}>
+          <div data-id="match-viewer-playback-controls" style={{ padding: '10px 16px', borderBottom: '1px solid var(--surface-2)', display: 'flex', gap: 6, justifyContent: 'center' }}>
             <PanelBtn onClick={stepBackward} disabled={!canPrev} title="Previous">◀</PanelBtn>
             <PanelBtn onClick={() => setIsPlaying(p => !p)} title={isPlaying ? 'Pause' : 'Play'}>
               {isPlaying ? '⏸' : '▶'}
@@ -379,8 +385,8 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
           </div>
 
           {/* Display toggles */}
-          <div style={{ padding: '10px 16px', borderBottom: '1px solid var(--surface-2)' }}>
-            <div style={sectionLabel}>Display</div>
+          <div data-id="match-viewer-display-toggles" style={{ padding: '10px 16px', borderBottom: '1px solid var(--surface-2)' }}>
+            <div data-id="match-viewer-display-label" style={sectionLabel}>Display</div>
             <Toggle label="Pip Count" value={showPipCount} onChange={setShowPipCount} />
             <Toggle label="Point Numbers" value={showPointNumbers} onChange={setShowPointNumbers} />
             <Toggle label="Opponent Nums" value={opponentNumbers} onChange={setOpponentNumbers} />
@@ -388,9 +394,9 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
           </div>
 
           {/* Speed section */}
-          <div style={{ padding: '10px 16px', borderBottom: '1px solid var(--surface-2)' }}>
-            <div style={sectionLabel}>Speed</div>
-            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 6 }}>
+          <div data-id="match-viewer-speed-section" style={{ padding: '10px 16px', borderBottom: '1px solid var(--surface-2)' }}>
+            <div data-id="match-viewer-speed-label" style={sectionLabel}>Speed</div>
+            <div data-id="match-viewer-speed-buttons" style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 6 }}>
               {SPEEDS.map((s, i) => (
                 <PanelBtn key={s} onClick={() => setSpeed(s)} active={speed === s}>
                   {SPEED_LABELS[i]}
@@ -400,10 +406,11 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
             </div>
           </div>
 
-          <div style={{ flex: 1 }} />
+          <div data-id="match-viewer-panel-spacer" style={{ flex: 1 }} />
 
           {/* Theme swatches */}
           <div
+            data-id="match-viewer-theme-section"
             style={{
               padding: '10px 16px',
               borderTop: '1px solid var(--surface-2)',
@@ -413,7 +420,7 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
               flexShrink: 0,
             }}
           >
-            <span style={{ fontSize: 10, color: 'var(--text-secondary)' }}>Theme</span>
+            <span data-id="match-viewer-theme-label" style={{ fontSize: 10, color: 'var(--text-secondary)' }}>Theme</span>
             <ThemeSwitcher />
           </div>
         </aside>
@@ -421,6 +428,7 @@ export default function MatchViewer({ match, onReset }: MatchViewerProps) {
 
       {/* Animation overlay — fixed position, outside the scaled board */}
       <div
+        data-id="match-viewer-animation-overlay"
         ref={overlayRef}
         style={{
           position: 'fixed',

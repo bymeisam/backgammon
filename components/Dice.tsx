@@ -19,6 +19,7 @@ function DieFace({ value, size = 38 }: { value: number; size?: number }) {
 
   return (
     <div
+      data-id="dice-die-face"
       style={{
         width: size,
         height: size,
@@ -32,6 +33,7 @@ function DieFace({ value, size = 38 }: { value: number; size?: number }) {
       {dots.map(([x, y], i) => (
         <div
           key={i}
+          data-id={`dice-dot-${i}`}
           style={{
             position: 'absolute',
             width: dotSize,
@@ -50,11 +52,11 @@ function DieFace({ value, size = 38 }: { value: number; size?: number }) {
 
 export default function Dice({ dice, noMove }: DiceProps) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+    <div data-id="dice-root" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
       <DieFace value={dice[0]} />
       <DieFace value={dice[1]} />
       {noMove && (
-        <span style={{ fontSize: 10, color: 'var(--text-secondary)', marginLeft: 2 }}>
+        <span data-id="dice-no-move" style={{ fontSize: 10, color: 'var(--text-secondary)', marginLeft: 2 }}>
           no move
         </span>
       )}

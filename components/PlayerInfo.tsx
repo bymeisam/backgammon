@@ -10,6 +10,7 @@ interface PlayerInfoProps {
 export default function PlayerInfo({ name, score, matchLength, pipCount, showPipCount, isBottom }: PlayerInfoProps) {
   return (
     <div
+      data-id="player-info-root"
       style={{
         display: 'flex',
         alignItems: isBottom ? 'flex-end' : 'flex-start',
@@ -19,6 +20,7 @@ export default function PlayerInfo({ name, score, matchLength, pipCount, showPip
       }}
     >
       <div
+        data-id="player-info-name"
         className="font-display"
         style={{
           fontSize: 18,
@@ -29,8 +31,9 @@ export default function PlayerInfo({ name, score, matchLength, pipCount, showPip
       >
         {name}
       </div>
-      <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+      <div data-id="player-info-score-row" style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
         <span
+          data-id="player-info-score"
           style={{
             fontSize: 13,
             color: 'var(--accent)',
@@ -40,7 +43,7 @@ export default function PlayerInfo({ name, score, matchLength, pipCount, showPip
           {score} / {matchLength}
         </span>
         {showPipCount && pipCount !== undefined && (
-          <span style={{ fontSize: 11, color: 'var(--text-secondary)' }}>
+          <span data-id="player-info-pip-count" style={{ fontSize: 11, color: 'var(--text-secondary)' }}>
             pip: {pipCount}
           </span>
         )}

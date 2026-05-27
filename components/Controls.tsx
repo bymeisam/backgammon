@@ -33,6 +33,7 @@ function Btn({
 }) {
   return (
     <button
+      data-id="controls-btn"
       onClick={onClick}
       disabled={disabled}
       title={title}
@@ -74,6 +75,7 @@ export default function Controls({
 
   return (
     <div
+      data-id="controls-root"
       style={{
         display: 'flex',
         alignItems: 'center',
@@ -97,7 +99,7 @@ export default function Controls({
         Next ▶
       </Btn>
 
-      <div style={{ width: 1, height: 20, background: 'var(--surface-2)', margin: '0 4px' }} />
+      <div data-id="controls-divider" style={{ width: 1, height: 20, background: 'var(--surface-2)', margin: '0 4px' }} />
 
       <Btn onClick={onSpeedChange} title="Change speed">
         Speed {speedLabel}

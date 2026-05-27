@@ -39,11 +39,13 @@ export default function Checker({ player, size, checkerId, label, style }: Check
 
   return (
     <div
+      data-id="checker-root"
       data-checker-id={checkerId}
       style={{ ...checkerStyle, ...style }}
     >
       {label !== undefined && (
         <span
+          data-id="checker-label"
           style={{
             fontSize: size * 0.36,
             fontWeight: 700,
